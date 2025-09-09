@@ -35,3 +35,29 @@ uint8_t CPU::read(uint16_t a){
 void CPU::write(uint16_t a, uint8_t d){
   bus->write(a,d);
 }
+
+
+void CPU::clock(){
+  if (cycles == 0) {
+    opcode = read(pc);
+    
+    //get starting cycles
+    cycles = lookup[opcode].cycles;
+
+    uint8_t additional_cycle1 = (this->*lookup[opcode].addrmode)();
+
+    uint8_t additional_cycle2 = (this->*lookup[opcode].operate)();
+
+    if(additional_cycle1 && additional_cycle2){ //if both return 1 add extra cycle
+      cycles++;
+    }
+
+  }
+    cycles--;
+}
+
+
+//Addressing Modes (12)
+
+
+// instruction (56)

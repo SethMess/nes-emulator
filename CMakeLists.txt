@@ -7,9 +7,9 @@ project(NesEmulator VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Find SDL2 using pkg-config (MSYS2 makes this work)
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+# # Find SDL2 using pkg-config (MSYS2 makes this work)
+# find_package(SDL2 REQUIRED)
+# include_directories(${SDL2_INCLUDE_DIRS})
 
 # Add source files
 add_executable(nes
