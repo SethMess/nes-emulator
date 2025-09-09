@@ -15,9 +15,9 @@ include_directories(${SDL2_INCLUDE_DIRS})
 add_executable(nes
     src/main.cpp
     src/cpu.cpp
-    src/ppu.cpp
+    # src/ppu.cpp
     src/bus.cpp
-    src/cartridge.cpp
+    # src/cartridge.cpp
 )
 
 # target_link_libraries(nes_emulator ${SDL2_LIBRARIES})

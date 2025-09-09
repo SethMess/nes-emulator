@@ -2,6 +2,7 @@
 
 int main(int argc, char const *argv[])
 {
-    std::cout << "hello world";
-    return 0;
+  using namespace std;
+  cout << "hello world" << endl;
+  return 0;
 }
