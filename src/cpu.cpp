@@ -60,4 +60,21 @@ void CPU::clock(){
 //Addressing Modes (12)
 
 
+uint8_t CPU::IMP(){
+  fetched = a; //might operate on the acumulator register
+  return 0;
+}
+
+
+uint8_t CPU::IMM(){
+  addr_abs = pc++; //next memory space
+  return 0;
+}
+
+uint8_t CPU::ZP0(){
+
+  return 0;
+}
+
+
 // instruction (56)
