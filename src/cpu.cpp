@@ -142,4 +142,52 @@ uint8_t CPU::ABY(){
     return 0;
   }
 }
+
+
+uint8_t CPU::IND(){
+  uint16_t lo_ptr = read(pc);
+	pc++;
+	uint16_t hi_ptr = read(pc);
+	pc++;
+  
+  uint16_t ptr = (hi_ptr << 8) | lo_ptr;
+  if (lo_ptr == 0x00FF) {
+    addr_abs = (read(ptr & 0xFF00) << 8) | read(ptr + 0); //if it were to go to a new page loop instead
+  }else {
+    addr_abs = (read(ptr + 1) << 8) | read(ptr + 0);
+  }
+
+  return 0;
+}
+
+
+uint8_t CPU::IZX(){
+  uint16_t addr = read(pc);
+  pc++;
+
+  uint16_t lo = read((uint16_t)(addr + (uint16_t)x) & 0x00FF);
+  uint16_t hi = read((uint16_t)(addr + (uint16_t)x + 1) & 0x00FF);
+
+  addr_abs = (hi << 8) | lo;
+  return 0;
+}
+
+uint8_t CPU::IZY(){
+  uint16_t addr = read(pc);
+  pc++;
+
+  uint16_t lo = read(addr & 0x00FF);
+  uint16_t hi = read((addr + 1) & 0x00FF);
+
+  addr_abs = (hi << 8) | lo;
+  addr_abs += y;
+
+  if ((addr_abs & 0xFF00) != (hi << 8)) {
+    return 1;
+  }else{
+    return 0;
+  }
+}
+
+
 // instruction (56)
