@@ -81,7 +81,7 @@ uint8_t CPU::ZP0(){
 
 uint8_t CPU::ZPX(){
   addr_abs = (read(pc) + x);
-  pc++
+  pc++;
   addr_abs &= 0x00FF
   return 0;
 }
@@ -191,3 +191,14 @@ uint8_t CPU::IZY(){
 
 
 // instruction (56)
+
+uint8_t CPU::fetch(){
+  if (lookup[opcode].addrmode != &CPU::IMP) {
+    fetched = read(addr_abs);
+  }
+  return fetched;
+}
+
+uint8_t CPU::AND(){
+  
+}
