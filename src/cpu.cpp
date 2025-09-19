@@ -199,6 +199,33 @@ uint8_t CPU::fetch(){
   return fetched;
 }
 
-uint8_t CPU::AND(){
+
+uint8_t CPU::ADC(){
   
+}
+
+uint8_t CPU::AND(){
+  a = a & fetched;
+  SetFlag(Z, a == 0x00); // does this \/
+  // status &= (a == 0x00);
+  SetFlag(N, a & 0x80) // does this \/
+  // status &= (a & 0x80);
+}
+
+uint8_t CPU::ASL(){
+  
+}
+
+
+uint8_t CPU::BCS(){
+  if (GetFlag(C) == 1) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
 }
