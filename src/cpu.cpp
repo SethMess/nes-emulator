@@ -216,7 +216,7 @@ uint8_t CPU::ASL(){
   
 }
 
-// Branch instructions
+// Branch instructions ****************
 // Branch if carry set
 uint8_t CPU::BCS(){
   if (GetFlag(C) == 1) {
@@ -245,8 +245,82 @@ uint8_t CPU::BCC(){
   return 0;
 }
 
+// Branch if zero bit is set
 uint8_t CPU::BEQ(){
-  if (GetFlag(C) == 1) {
+  if (GetFlag(Z) == 1) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
+}
+
+// Branch if zero bit is not set
+uint8_t CPU::BNE(){
+  if (GetFlag(Z) == 0) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
+}
+
+
+// Branch if the negative flag is clear
+uint8_t CPU::BPL(){
+  if (GetFlag(N) == 0) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
+}
+
+
+// Branch if the negative flag is set
+uint8_t CPU::BMI(){
+  if (GetFlag(N) == 1) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
+}
+
+// Branch if the overflow is clear
+uint8_t CPU::BVC(){
+  if (GetFlag(V) == 0) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
+}
+
+
+// Branch if the overflow is set
+uint8_t CPU::BVS(){
+  if (GetFlag(V) == 1) {
     cycles++;
     addr_abs = pc + addr_rel;
 
