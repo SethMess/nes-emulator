@@ -216,8 +216,36 @@ uint8_t CPU::ASL(){
   
 }
 
-
+// Branch instructions
+// Branch if carry set
 uint8_t CPU::BCS(){
+  if (GetFlag(C) == 1) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
+}
+
+// Branch if carry clear
+uint8_t CPU::BCC(){
+  if (GetFlag(C) == 0) {
+    cycles++;
+    addr_abs = pc + addr_rel;
+
+    if ((addr_abs & 0xFF00) != (pc & 0xFF00)) {
+      cycles++;
+    }
+    pc = addr_abs;
+  }
+  return 0;
+}
+
+uint8_t CPU::BEQ(){
   if (GetFlag(C) == 1) {
     cycles++;
     addr_abs = pc + addr_rel;
