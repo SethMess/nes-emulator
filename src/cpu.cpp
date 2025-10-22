@@ -331,3 +331,52 @@ uint8_t CPU::BVS(){
   }
   return 0;
 }
+
+
+// Flag instructions that set and clear flags
+
+// Clear carry bit
+uint8_t CPU::CLC(){
+  SetFlag(C, false);
+  return 0;
+}
+
+// Set carry bit
+uint8_t CPU::SEC(){
+  SetFlag(C, true);
+  return 0;
+}
+
+
+
+// Clear interupt bit
+uint8_t CPU::CLI(){
+  SetFlag(I, false);
+  return 0;
+}
+
+// Set interupt bit
+uint8_t CPU::SEI(){
+  SetFlag(I, true);
+  return 0;
+}
+
+
+
+// Clear decimal bit
+uint8_t CPU::CLD(){
+  SetFlag(D, false);
+  return 0;
+}
+
+// Set decimal bit
+uint8_t CPU::SED(){
+  SetFlag(D, true);
+  return 0;
+}
+
+// Clear overflow bit, no corresponding set overflow its a hardware thing
+uint8_t CPU::CLV(){
+  SetFlag(V, false);
+  return 0;
+}
