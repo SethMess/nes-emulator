@@ -178,20 +178,23 @@ uint8_t CPU::IMM() {
 uint8_t CPU::ZP0() {
   addr_abs = read(pc);
   pc++;
-  addr_abs &=
-      0x00FF // sets the first byte to be zero since it zero page Addressing
-      return 0;
+  // sets the first byte to be zero since it zero page Addressing
+  addr_abs &= 0x00FF;
+  return 0;
 }
 
 uint8_t CPU::ZPX() {
   addr_abs = (read(pc) + x);
   pc++;
-  addr_abs &= 0x00FF return 0;
+  addr_abs &= 0x00FF;
+  return 0;
 }
 
 uint8_t CPU::ZPY() {
   addr_abs = (read(pc) + y);
-  pc++ addr_abs &= 0x00FF return 0;
+  pc++;
+  addr_abs &= 0x00FF;
+  return 0;
 }
 
 // understand this one more
@@ -199,8 +202,8 @@ uint8_t CPU::REL() {
   addr_rel = read(pc);
   pc++;
   if (addr_rel & 0x80) {
-    addr_rel |= 0xFF00 // how does this work? does it overflow if its
-                       // negative???
+    addr_rel |= 0xFF00; // how does this work? does it overflow if its
+                        // negative???
   }
   return 0;
 }
@@ -314,7 +317,21 @@ uint8_t CPU::ADC() {
   return 1;
 }
 
-uint8_t CPU::SBC() {}
+uint8_t CPU::SBC() {
+  fetch();
+  uint16_t inverted_value = ((uint16_t)fetched) ^ 0x00FF;
+
+  temp = (uint16_t)a + inverted_value + (uint16_t)GetFlag(C);
+  SetFlag(C, temp > 255); // or temp & 0xFF00
+  SetFlag(Z, (temp & 0x00FF) == 0);
+  SetFlag(N, temp & 0x08);
+  SetFlag(
+      V, (~((uint16_t)a ^ (uint16_t)fetched) & ((uint16_t)a ^ (uint16_t)temp)) &
+             0x0080);
+  a = temp &
+      0x00FF; // sets the acumulator to the low byte of calculated variable
+  return 1;
+}
 
 uint8_t CPU::AND() {
   a = a & fetched;

@@ -6,6 +6,8 @@ project(NesEmulator VERSION 0.1 LANGUAGES CXX)
 # Use modern C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 # # Find SDL2 using pkg-config (MSYS2 makes this work)
 # find_package(SDL2 REQUIRED)
