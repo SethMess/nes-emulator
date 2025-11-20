@@ -499,3 +499,19 @@ uint8_t CPU::CLV() {
   SetFlag(V, false);
   return 0;
 }
+
+// Writes the value of the acumulator to the stack
+uint8_t CPU::PHA() {
+  write(0x0100 + stkp, a);
+  stkp--;
+  return 0;
+}
+
+// Reads the value to the acumulator from the stack
+uint8_t CPU::PLA() {
+  stkp++;
+  a = read(0x0100 + stkp);
+  SetFlag(Z, a == 0x00);
+  SetFlag(N, a & 0x80);
+  return 0;
+}
