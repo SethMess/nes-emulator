@@ -339,9 +339,10 @@ uint8_t CPU::AND() {
   // status &= (a == 0x00);
   SetFlag(N, a & 0x80); // does this \/
   // status &= (a & 0x80);
+  return 1;
 }
 
-uint8_t CPU::ASL() {}
+uint8_t CPU::ASL() { return 1; }
 
 // Branch instructions ****************
 // Branch if carry set
@@ -500,6 +501,7 @@ uint8_t CPU::CLV() {
   return 0;
 }
 
+// Note: the stack starts at address 0x0100
 // Writes the value of the acumulator to the stack
 uint8_t CPU::PHA() {
   write(0x0100 + stkp, a);
@@ -513,5 +515,82 @@ uint8_t CPU::PLA() {
   a = read(0x0100 + stkp);
   SetFlag(Z, a == 0x00);
   SetFlag(N, a & 0x80);
+  return 0;
+}
+
+void CPU::reset() {
+  a = 0;
+  x = 0;
+  y = 0;
+  stkp = 0xFD;
+  status = 0x00 | U;
+
+  addr_abs = 0xFFFC;
+  uint16_t lo = read(addr_abs + 0);
+  uint16_t hi = read(addr_abs + 1);
+
+  pc = (hi << 8) | lo;
+
+  addr_rel = 0x0000;
+  addr_abs = 0x0000;
+  fetched = 0x00;
+
+  cycles = 8;
+}
+
+void CPU::irq() {
+  if (GetFlag(I) == 0) {
+    write(0x0100 + stkp, (pc >> 8) & 0x00FF); // High byte
+    stkp--;
+    write(0x0100 + stkp, pc & 0x00FF); // Low byte
+    stkp--;
+
+    SetFlag(B, 0);
+    SetFlag(U, 1);
+    SetFlag(I, 1);
+    write(0x0100 + stkp, status);
+    stkp--;
+
+    addr_abs = 0xFFFE; // fixed know address set by programmer
+    uint16_t lo = read(addr_abs + 0);
+    uint16_t hi = read(addr_abs + 1);
+    pc = (hi << 8) | lo;
+
+    cycles = 7;
+  }
+}
+
+void CPU::nmi() {
+  write(0x0100 + stkp, (pc >> 8) & 0x00FF); // High byte
+  stkp--;
+  write(0x0100 + stkp, pc & 0x00FF); // Low byte
+  stkp--;
+
+  SetFlag(B, 0);
+  SetFlag(U, 1);
+  SetFlag(I, 1);
+  write(0x0100 + stkp, status);
+  stkp--;
+
+  addr_abs = 0xFFFA; // fixed know address set by programmer
+  uint16_t lo = read(addr_abs + 0);
+  uint16_t hi = read(addr_abs + 1);
+  pc = (hi << 8) | lo;
+
+  cycles = 8;
+}
+
+uint8_t CPU::RTI() {
+  stkp++;
+  status = read(0x0100 + stkp);
+  status &= ~B;
+  status &= ~U;
+  SetFlag(I, 0);
+
+  stkp++;
+  uint16_t lo = read(0x0100 + stkp);
+  stkp++;
+  uint16_t hi = read(0x0100 + stkp);
+  pc = (hi << 8) | lo;
   return 0;
 }
